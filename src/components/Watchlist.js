@@ -1,103 +1,110 @@
-import React, { useState } from "react";
+import React, { useContext } from "react";
+import { GlobalContext } from "../context/GlobalState";
 
-import Grid from "@material-ui/core/Grid";
 import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
+import clsx from "clsx";
+import Card from "@material-ui/core/Card";
+import CardHeader from "@material-ui/core/CardHeader";
+import CardMedia from "@material-ui/core/CardMedia";
+import CardContent from "@material-ui/core/CardContent";
+import CardActions from "@material-ui/core/CardActions";
+import Collapse from "@material-ui/core/Collapse";
+import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
-import PhotoCamera from "@material-ui/icons/PhotoCamera";
-import Resultcard from "./Resultcard";
+import Typography from "@material-ui/core/Typography";
+import { red } from "@material-ui/core/colors";
+import { spacing } from "@material-ui/system";
+import Grid from "@material-ui/core/Grid";
+import Chip from "@material-ui/core/Chip";
+
+import Tooltip from "@material-ui/core/Tooltip";
+import Button from "@material-ui/core/Button";
+
 const useStyles = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    backgroundColor: theme.palette.background.default,
-    padding: theme.spacing(3),
-  },
   root: {
-    flexGrow: 1,
+    // maxWidth: 445,
+    maxWidth: "60%",
+    // paddingRight: 100,
   },
-  root: {
+  media: {
+    height: "250px",
+
+    paddingTop: "56.25%", // 16:9
+  },
+  cardActions: {
     display: "flex",
-    flexWrap: "wrap",
+    justifyContent: "flex-end",
   },
-  textField: {
-    marginLeft: theme.spacing(1),
-    marginRight: theme.spacing(1),
-    width: "50ch",
+  cardContent: {
+    display: "flex",
+    justifyContent: "space-between",
   },
 }));
 
-const Watchlist = () => {
+const Watchlist = ({}) => {
   const classes = useStyles();
 
-  const [query, setQuery] = useState("");
+  const { watchlist } = useContext(GlobalContext);
 
-  const [results, setResults] = useState([]);
+  const { removeMovieFromWatchlist, addMovieToWatched } = useContext(
+    GlobalContext
+  );
 
-  const onChange = (e) => {
-    e.preventDefault();
-    setQuery(e.target.value);
-
-    fetch(`https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&language=en-US&query=${e.target.value}&page=1&include_adult=true
-    `)
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        if (!data.errors) {
-          setResults(data.results);
-        } else {
-          setResults([]);
-        }
-      });
-  };
+  console.log(watchlist.lenght);
 
   return (
-    <div>
+    <>
       <Grid container justify="center" spacing={4}>
-        <Grid item xs={2} sm={2} md={2} lg={2} mt={2}></Grid>
-        <Grid item xs={6} sm={6} md={6} lg={6} mt={6}>
-          <TextField
-            id="standard-basic"
-            style={{ margin: 8, marginTop: 90 }}
-            placeholder="Search for a Movie"
-            fullWidth
-            margin="normal"
-            InputLabelProps={{
-              shrink: true,
-            }}
-            // variant="filled"
-            value={query}
-            onChange={onChange}
-          />
+        <Grid item xs={6} sm={6} md={3} lg={3} mt={2}>
+          <h2>My Watchlist {watchlist.lenght}</h2>
+          {watchlist.lenght === 0 ? (
+            <div>no movie added to the watchlist</div>
+          ) : (
+            <div>
+              <div> movies </div>
+              {watchlist.map((movie) => (
+                <Card className={classes.root} style={{ paddingTop: 10 }}>
+                  <CardMedia
+                    className={classes.media}
+                    image={`http://image.tmdb.org/t/p/w300/${movie.poster_path}`}
+                    title={movie.title}
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" component="h2">
+                      {movie.title}
+                    </Typography>
+                  </CardContent>
+                  <CardActions disableSpacing>
+                    <Tooltip title="Add to Watchlist" arrow>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ padding: 5, marginLeft: 0, marginRight: 10 }}
+                        ml={0}
+                        onClick={() => addMovieToWatched(movie)}
+                      >
+                        Add to Watched
+                      </Button>
+                    </Tooltip>
+                    <Tooltip title="Delete Movie" arrow>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ padding: 5, marginRight: 0 }}
+                        mr={0}
+                        onClick={() => removeMovieFromWatchlist(movie.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Tooltip>
+                  </CardActions>
+                </Card>
+              ))}
+            </div>
+          )}
         </Grid>
-
-        <Grid item xs={2} sm={2} md={2} lg={2} mt={2}>
-          <label htmlFor="contained-button-file">
-            <Button
-              variant="contained"
-              color="primary"
-              component="span"
-              style={{ margin: 8, marginTop: 90 }}
-            >
-              Search
-            </Button>
-          </label>
-        </Grid>
-        <Grid item xs={2} sm={2} md={2} lg={2} mt={2}></Grid>
-        {/* <div id="text">{query}</div> */}
       </Grid>
-
-      <Grid container justify="center">
-        {results.length > 0 && (
-          <Grid item xs={2} sm={2} md={2} lg={2}>
-            {results.map((movie) => (
-              <Resultcard />
-            ))}
-          </Grid>
-        )}
-      </Grid>
-    </div>
+    </>
   );
 };
 
