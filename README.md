@@ -4,7 +4,7 @@
 
 keep track of the movies you want to watch with a simple Watchlist app build with React js
 
-Used React/Material UI to build components . Used Context api for state management . It is simple & minimalistic app to add movies instantly it does not need Login/Signup so it stores your data to localstorage.
+Used React/Material UI to build components . Used Context api for state management . It is simple & minimalistic app to add movies instantly , it does not need Login/Signup so it stores your data in localstorage.
 
 
 
