@@ -52,6 +52,8 @@ const Add = () => {
       });
   };
 
+  console.log(results.length);
+
   return (
     <>
       <Grid container justify="center" spacing={4}>

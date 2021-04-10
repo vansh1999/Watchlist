@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { GlobalContext } from "../context/GlobalState";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Watchlist = ({}) => {
+const Watchlist = () => {
   const classes = useStyles();
 
   const { watchlist } = useContext(GlobalContext);
@@ -50,18 +50,20 @@ const Watchlist = ({}) => {
     GlobalContext
   );
 
-  console.log(watchlist.lenght);
+  console.log(watchlist);
 
   return (
     <>
       <Grid container justify="center" spacing={4}>
-        <Grid item xs={6} sm={6} md={3} lg={3} mt={2}>
-          <h2>My Watchlist {watchlist.lenght}</h2>
-          {watchlist.lenght === 0 ? (
+        <Grid item xs={6} sm={6} md={6} lg={3} mt={2}>
+          <h2>My Watchlist</h2>
+          {watchlist.length === 0 ? (
             <div>no movie added to the watchlist</div>
           ) : (
             <div>
-              <div> movies </div>
+              <Button variant="outlined" color="primary">
+                {watchlist.length} movies
+              </Button>
               {watchlist.map((movie) => (
                 <Card className={classes.root} style={{ paddingTop: 10 }}>
                   <CardMedia

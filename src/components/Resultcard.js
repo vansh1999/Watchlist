@@ -40,10 +40,18 @@ const useStyles = makeStyles((theme) => ({
 const Resultcard = ({ movie }) => {
   const classes = useStyles();
 
-  const { addMovieToWatchlist, watchlist } = useContext(GlobalContext);
+  const {
+    addMovieToWatchlist,
+    addMovieToWatched,
+    watchlist,
+    watched,
+  } = useContext(GlobalContext);
 
-  let storedMovie = watchlist.find((x) => x.id === movie.id);
-  const watchlistDisabled = storedMovie ? true : false;
+  let watchlistStoredMovie = watchlist.find((x) => x.id === movie.id);
+  const watchlistDisabled = watchlistStoredMovie ? true : false;
+
+  let watchedStoredMovie = watched.find((x) => x.id === movie.id);
+  const watchedDisabled = watchedStoredMovie ? true : false;
 
   return (
     <>
@@ -78,6 +86,8 @@ const Resultcard = ({ movie }) => {
                 color="primary"
                 style={{ padding: 5, marginRight: 0 }}
                 mr={0}
+                disabled={watchedDisabled}
+                onClick={() => addMovieToWatched(movie)}
               >
                 Add to Watched
               </Button>

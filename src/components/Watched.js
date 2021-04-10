@@ -41,23 +41,30 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Watched = ({}) => {
+const Watched = () => {
   const classes = useStyles();
 
   const { watched } = useContext(GlobalContext);
 
-  const { removeMovieFromWatched } = useContext(GlobalContext);
+  const { removeMovieFromWatched, addMovieToWatchlist } = useContext(
+    GlobalContext
+  );
 
+  console.log(watched);
   return (
     <>
       <Grid container justify="center" spacing={4}>
-        <Grid item xs={6} sm={6} md={3} lg={3} mt={2}>
+        <Grid item xs={6} sm={6} md={6} lg={3} mt={2}>
           {/* <h2>Watched Movies {watched.lenght}</h2> */}
-          {watched.lenght === 0 ? (
-            <div>no movie added to the watchlist</div>
+          <h2>My Watched list </h2>
+
+          {watched.length === 0 ? (
+            <div>no movie watched</div>
           ) : (
             <div>
-              <div> movies </div>
+              <Button variant="outlined" color="primary">
+                {watched.length} movies
+              </Button>
               {watched.map((movie) => (
                 <Card className={classes.root} style={{ paddingTop: 10 }}>
                   <CardMedia
@@ -70,17 +77,35 @@ const Watched = ({}) => {
                       {movie.title}
                     </Typography>
                   </CardContent>
-                  <Tooltip title="Delete Movie" arrow>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      style={{ padding: 5, marginRight: 0 }}
-                      mr={0}
-                      onClick={() => removeMovieFromWatched(movie.id)}
-                    >
-                      Delete
-                    </Button>
-                  </Tooltip>
+
+                  <CardActions disableSpacing>
+                    <Tooltip title="Add to Watchlist" arrow>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        style={{ padding: 5, marginLeft: 0, marginRight: 10 }}
+                        ml={0}
+                        onClick={() => {
+                          addMovieToWatchlist(movie);
+                          removeMovieFromWatched(movie.id);
+                        }}
+                      >
+                        Watch Again
+                      </Button>
+                    </Tooltip>
+
+                    <Tooltip title="Delete Movie" arrow>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        style={{ padding: 5, marginRight: 0 }}
+                        mr={0}
+                        onClick={() => removeMovieFromWatched(movie.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Tooltip>
+                  </CardActions>
                 </Card>
               ))}
             </div>
